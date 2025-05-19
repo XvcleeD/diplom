@@ -1,14 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../constants.dart';
+import 'profile_screen.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  final String userId;
+  const HomeScreen({super.key, required this.userId});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  Map<String, dynamic>? userData;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    try {
+      final doc = await FirebaseFirestore.instance.collection('users').doc(widget.userId).get();
+      if (doc.exists) {
+        setState(() {
+          userData = doc.data();
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load user data: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    String displayName = userData?['username'] ?? 'User';
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Нүүр хуудас'),
+        backgroundColor: AppColors.primary,
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
@@ -21,8 +66,12 @@ class HomeScreen extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: BoxDecoration(
-                color: AppColors.primary,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFFB39DDB), Color(0xFFD1C4E9)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,47 +79,44 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   const CircleAvatar(
                     radius: 30,
-                    child: Icon(Icons.person, size: 30),
+                    backgroundColor: Colors.white,
+                    child: Icon(Icons.person, size: 30, color: Color(0xFF7E5A9B)),
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Admin User',
+                    displayName,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: AppColors.onPrimary,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
                   ),
                 ],
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.home_outlined),
-              title: const Text('Нүүр хуудас'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.person_outline),
-              title: const Text('Профайл'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings_outlined),
-              title: const Text('Тохиргоо'),
-              onTap: () {},
-            ),
+            _buildDrawerItem(Icons.home_outlined, 'Нүүр хуудас', () {
+              Navigator.pop(context);
+            }),
+            _buildDrawerItem(Icons.person_outline, 'Профайл', () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileScreen(username: widget.userId),
+                ),
+              );
+            }),
+            _buildDrawerItem(Icons.settings_outlined, 'Тохиргоо', () {}),
+            _buildDrawerItem(Icons.edit, 'Боловсруулах арга', () {
+              Navigator.pushNamed(context, AppRoutes.methods);
+            }),
             const Divider(),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Гарах'),
-              onTap: () {
-                Navigator.pushReplacementNamed(context, AppRoutes.welcome);
-              },
-            ),
+            _buildDrawerItem(Icons.logout, 'Гарах', () {
+              Navigator.pushReplacementNamed(context, AppRoutes.welcome);
+            }),
           ],
         ),
       ),
-      body: Padding(
+      body: Container(
+        color: const Color(0xFFF5F2FA),
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,36 +142,25 @@ class HomeScreen extends StatelessWidget {
                 crossAxisSpacing: 16,
                 children: [
                   _buildFeatureCard(
-                    context,
                     icon: Icons.image,
                     title: 'Зураг боловсруулах',
                     route: AppRoutes.imageProcessing,
-                    color: Colors.blue.shade100,
-                    iconColor: Colors.blue,
+                    color: Colors.purple.shade100,
+                    iconColor: Colors.deepPurple,
                   ),
                   _buildFeatureCard(
-                    context,
                     icon: Icons.history,
                     title: 'Түүх',
                     route: AppRoutes.history,
-                    color: Colors.green.shade100,
-                    iconColor: Colors.green,
+                    color: Colors.pink.shade100,
+                    iconColor: Colors.pink,
                   ),
                   _buildFeatureCard(
-                    context,
                     icon: Icons.analytics,
                     title: 'Статик аналитик',
                     route: AppRoutes.analytics,
-                    color: Colors.orange.shade100,
-                    iconColor: Colors.orange,
-                  ),
-                  _buildFeatureCard(
-                    context,
-                    icon: Icons.help_outline,
-                    title: 'Боловсруулах арга',
-                    route: AppRoutes.methods,
-                    color: Colors.purple.shade100,
-                    iconColor: Colors.purple,
+                    color: Colors.pink.shade100,
+                    iconColor: AppColors.primary,
                   ),
                 ],
               ),
@@ -136,8 +171,18 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFeatureCard(
-    BuildContext context, {
+  Widget _buildDrawerItem(IconData icon, String title, VoidCallback onTap) {
+    return ListTile(
+      leading: Icon(icon, color: AppColors.primary),
+      title: Text(
+        title,
+        style: const TextStyle(fontWeight: FontWeight.w500),
+      ),
+      onTap: onTap,
+    );
+  }
+
+  Widget _buildFeatureCard({
     required IconData icon,
     required String title,
     required String route,
@@ -145,27 +190,27 @@ class HomeScreen extends StatelessWidget {
     required Color iconColor,
   }) {
     return Card(
-      elevation: 2,
+      elevation: 3,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         onTap: () => Navigator.pushNamed(context, route),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: color,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: iconColor, size: 24),
+                child: Icon(icon, color: iconColor, size: 30),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
               Text(
                 title,
                 textAlign: TextAlign.center,

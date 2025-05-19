@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "531639269253",
+    "project_id": "ariukathesis",
+    "storage_bucket": "ariukathesis.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:531639269253:android:0b48b390445d69e4fcb6ec",
+        "android_client_info": {
+          "package_name": "com.example.diplom"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeQaCDnV9riOnn9yRfByHX1uJu20ttjkg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

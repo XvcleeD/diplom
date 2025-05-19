@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="gcm_defaultSenderId" translatable="false">531639269253</string>
+    <string name="google_api_key" translatable="false">AIzaSyCeQaCDnV9riOnn9yRfByHX1uJu20ttjkg</string>
+    <string name="google_app_id" translatable="false">1:531639269253:android:0b48b390445d69e4fcb6ec</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyCeQaCDnV9riOnn9yRfByHX1uJu20ttjkg</string>
+    <string name="google_storage_bucket" translatable="false">ariukathesis.firebasestorage.app</string>
+    <string name="project_id" translatable="false">ariukathesis</string>
+</resources>

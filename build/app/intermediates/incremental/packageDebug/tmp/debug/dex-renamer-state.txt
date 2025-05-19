@@ -1,16 +1,19 @@
-#Tue Apr 22 15:17:11 ULAT 2025
-base.0=/Users/huslee/Downloads/Ariu/diplom/build/app/intermediates/dex/debug/mergeExtDexDebug/classes.dex
-base.1=/Users/huslee/Downloads/Ariu/diplom/build/app/intermediates/dex/debug/mergeLibDexDebug/0/classes.dex
-base.2=/Users/huslee/Downloads/Ariu/diplom/build/app/intermediates/dex/debug/mergeProjectDexDebug/0/classes.dex
-base.3=/Users/huslee/Downloads/Ariu/diplom/build/app/intermediates/dex/debug/mergeProjectDexDebug/1/classes.dex
-base.4=/Users/huslee/Downloads/Ariu/diplom/build/app/intermediates/dex/debug/mergeProjectDexDebug/5/classes.dex
+#Tue May 20 03:43:12 ULAT 2025
+base.0=C\:\\Users\\PC\\Documents\\ariuka\\diplom\\build\\app\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
+base.1=C\:\\Users\\PC\\Documents\\ariuka\\diplom\\build\\app\\intermediates\\dex\\debug\\mergeLibDexDebug\\0\\classes.dex
+base.2=C\:\\Users\\PC\\Documents\\ariuka\\diplom\\build\\app\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
+base.3=C\:\\Users\\PC\\Documents\\ariuka\\diplom\\build\\app\\intermediates\\dex\\debug\\mergeProjectDexDebug\\1\\classes.dex
+base.4=C\:\\Users\\PC\\Documents\\ariuka\\diplom\\build\\app\\intermediates\\dex\\debug\\mergeProjectDexDebug\\5\\classes.dex
+base.5=C\:\\Users\\PC\\Documents\\ariuka\\diplom\\build\\app\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes2.dex
 path.0=classes.dex
 path.1=0/classes.dex
 path.2=0/classes.dex
 path.3=1/classes.dex
 path.4=5/classes.dex
+path.5=classes2.dex
 renamed.0=classes.dex
 renamed.1=classes2.dex
 renamed.2=classes3.dex
 renamed.3=classes4.dex
 renamed.4=classes5.dex
+renamed.5=classes6.dex

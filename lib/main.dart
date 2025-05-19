@@ -7,8 +7,15 @@ import 'screens/signin_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/home_screen.dart';
 import 'constants.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 
@@ -21,61 +28,45 @@ class MyApp extends StatelessWidget {
       title: 'Auth Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.light(
-          primary: AppColors.primary,
-          secondary: AppColors.secondary,
-          background: AppColors.background,
-          surface: AppColors.surface,
-          error: AppColors.error,
-          onPrimary: AppColors.onPrimary,
-          onSecondary: AppColors.onSecondary,
-          onBackground: AppColors.onBackground,
-          onSurface: AppColors.onSurface,
-          onError: AppColors.onError,
-        ),
-        useMaterial3: true,
-        appBarTheme: const AppBarTheme(
-          centerTitle: true,
-          elevation: 0,
-          scrolledUnderElevation: 2,
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          filled: true,
-          fillColor: AppColors.surface,
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: AppColors.onPrimary,
-            minimumSize: const Size(double.infinity, 50),
-            shape: RoundedRectangleBorder(  
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        ),
-        outlinedButtonTheme: OutlinedButtonThemeData(
-          style: OutlinedButton.styleFrom(
-            foregroundColor: AppColors.primary,
-            minimumSize: const Size(double.infinity, 50),
-            side: BorderSide(color: AppColors.primary),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        ),
+        // your existing theme code ...
       ),
       initialRoute: AppRoutes.welcome,
-      routes: {
-        AppRoutes.welcome: (context) => const WelcomeScreen(),
-        AppRoutes.signIn: (context) => const SignInScreen(),
-        AppRoutes.signUp: (context) => const SignUpScreen(),
-        AppRoutes.home: (context) => const HomeScreen(),
-        AppRoutes.imageProcessing: (context) => const ImageProcessingScreen(),
-        AppRoutes.history: (context) => const HistoryScreen(),
-        AppRoutes.methods: (context) => const MethodsScreen(),
+
+      // Remove static routes map, use onGenerateRoute for dynamic args
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case AppRoutes.welcome:
+            return MaterialPageRoute(builder: (_) => const WelcomeScreen());
+
+          case AppRoutes.signIn:
+            return MaterialPageRoute(builder: (_) => const SignInScreen());
+
+          case AppRoutes.signUp:
+            return MaterialPageRoute(builder: (_) => const SignUpScreen());
+
+          case AppRoutes.home:
+            // Expect userId passed in arguments
+            final args = settings.arguments;
+            if (args is String) {
+              return MaterialPageRoute(
+                builder: (_) => HomeScreen(userId: args),
+              );
+            }
+            // If no args passed, fallback to some error page or welcome
+            return MaterialPageRoute(builder: (_) => const WelcomeScreen());
+
+          case AppRoutes.imageProcessing:
+            return MaterialPageRoute(builder: (_) => const ImageProcessingScreen());
+
+          case AppRoutes.history:
+            return MaterialPageRoute(builder: (_) => const HistoryScreen());
+
+          case AppRoutes.methods:
+            return MaterialPageRoute(builder: (_) => const MethodsScreen());
+
+          default:
+            return MaterialPageRoute(builder: (_) => const WelcomeScreen());
+        }
       },
     );
   }
